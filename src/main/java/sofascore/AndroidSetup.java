@@ -31,6 +31,7 @@ public class AndroidSetup {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         //capabilities.setCapability("device", "emulator-5554");
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Android Emulator");
+        //capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, MobileBrowserType.CHROME);
         //IOS/Android/FireFoxOS
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
         //path to apk

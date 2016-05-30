@@ -1,40 +1,36 @@
 package sofascore.pages;
 
 import io.appium.java_client.android.AndroidDriver;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
+import sofascore.enums.Sports;
+import sofascore.enums.Tournaments;
+import sofascore.objects.HomePageObjects;
 
 public class HomePage extends BasePage {
-
-    By tabGames = By.xpath("//*[@resource-id = '" + app_package_name + "psts_tab_title' and @text='Games']");
-    By lnkTournamentType = By.xpath("//*[@resource-id = '" + app_package_name + "team_name' and @text='International']");
-    By listOfSports = By.xpath("//*[@resource-id = '" + app_package_name + "tvTitle' and @text='Football']");
-    By eventTile = By.xpath("//*[@resource-id = '" + app_package_name + "teamLL']");
-    By lnkLastTournamentType = By.xpath("//*[@resource-id = '" + app_package_name + "team_name' and @text='Zambia']");
 
     public HomePage(WebDriver driver) {
         super(driver);
     }
 
-    public HomePage selectTournament() {
-        waitForVisibilityOf(lnkTournamentType);
-        driver.findElement(lnkTournamentType).click();
+    public HomePage selectTournament(Tournaments tournament) {
+        waitForVisibilityOf(HomePageObjects.lnktournamentType(tournament.getTournament()));
+        driver.findElement(HomePageObjects.lnktournamentType(tournament.getTournament())).click();
         return this;
     }
 
-    public HomePage selectSportFromDropdown() {
-        waitForVisibilityOf(listOfSports);
-        driver.findElement(listOfSports).click();
+    public HomePage selectSportFromDropdown(Sports sport) {
+        waitForVisibilityOf(HomePageObjects.dropDownListOfSports(sport.getSport()));
+        driver.findElement(HomePageObjects.dropDownListOfSports(sport.getSport())).click();
         return this;
     }
 
     public boolean isEventDisplayedForTournament() {
-        return driver.findElements(eventTile).size() != 0;
+        return driver.findElements(HomePageObjects.eventTiles()).size() != 0;
     }
 
-    public HomePage scrollDownToLastTournament() {
-        while (driver.findElements(lnkLastTournamentType).size() == 0) {
+    public HomePage scrollDownToLastTournament(Tournaments tournament) {
+        while (driver.findElements(HomePageObjects.lnktournamentType(tournament.getTournament())).size() == 0) {
             Dimension d = driver.manage().window().getSize();
             ((AndroidDriver) driver).swipe(d.getWidth() / 2, d.getHeight() / 2, d.getWidth() / 2, (d.getHeight() / 2) - 400, 0);
         }
