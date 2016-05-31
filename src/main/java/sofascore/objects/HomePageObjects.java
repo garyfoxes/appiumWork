@@ -24,4 +24,8 @@ public class HomePageObjects {
     public static By dropDownListOfSports(String sport) {
         return By.xpath("//*[@resource-id = '" + app_package_name + "tvTitle' and @text='" + sport + "']");
     }
+
+    public static By iconCalendar() {
+        return By.xpath("//*[@resource-id = '" + app_package_name + "calendar_icon']");
+    }
 }

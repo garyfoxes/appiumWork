@@ -1,14 +1,14 @@
 package sofascore.pages;
 
+import io.appium.java_client.MobileDriver;
+import io.appium.java_client.MultiTouchAction;
+import io.appium.java_client.TouchAction;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.HashMap;
+import sofascore.enums.Position;
 
 /**
  * Created by nishant on 13/09/14.
@@ -35,56 +35,20 @@ public class BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
-    public void scrollPageUp() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        HashMap<String, Double> swipeObject = new HashMap<String, Double>();
-        swipeObject.put("startX", 0.50);
-        swipeObject.put("startY", 0.95);
-        swipeObject.put("endX", 0.50);
-        swipeObject.put("endY", 0.01);
-        swipeObject.put("duration", 3.0);
-        js.executeScript("mobile: scroll", swipeObject);
-    }
-
-    public void swipeLeftToRight() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        HashMap<String, Double> swipeObject = new HashMap<String, Double>();
-        swipeObject.put("startX", 0.01);
-        swipeObject.put("startY", 0.5);
-        swipeObject.put("endX", 0.9);
-        swipeObject.put("endY", 0.6);
-        swipeObject.put("duration", 3.0);
-        js.executeScript("mobile: swipe", swipeObject);
-    }
-
-    public void swipeRightToLeft() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        HashMap<String, Double> swipeObject = new HashMap<String, Double>();
-        swipeObject.put("startX", 0.9);
-        swipeObject.put("startY", 0.5);
-        swipeObject.put("endX", 0.01);
-        swipeObject.put("endY", 0.5);
-        swipeObject.put("duration", 3.0);
-        js.executeScript("mobile: swipe", swipeObject);
-    }
-
-    public void swipeFirstCarouselFromRightToLeft() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        HashMap<String, Double> swipeObject = new HashMap<String, Double>();
-        swipeObject.put("startX", 0.9);
-        swipeObject.put("startY", 0.2);
-        swipeObject.put("endX", 0.01);
-        swipeObject.put("endY", 0.2);
-        swipeObject.put("duration", 3.0);
-        js.executeScript("mobile: swipe", swipeObject);
-    }
-
-    public void performTapAction(WebElement elementToTap) {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        HashMap<String, Double> tapObject = new HashMap<String, Double>();
-        tapObject.put("x", (double) 360); // in pixels from left
-        tapObject.put("y", (double) 170); // in pixels from top
-        tapObject.put("element", Double.valueOf(((RemoteWebElement) elementToTap).getId()));
-        js.executeScript("mobile: tap", tapObject);
+    protected void swipeHorizontalWithMultipleFingers(Position position) {
+        int xcoordinates = 0;
+        MultiTouchAction mta = new MultiTouchAction((MobileDriver) driver);
+        Dimension d = driver.manage().window().getSize();
+        switch (position) {
+            case LEFT:
+                xcoordinates = -70;
+                break;
+            case RIGHT:
+                xcoordinates = 70;
+                break;
+        }
+        TouchAction ta0 = new TouchAction((MobileDriver) driver).press(d.getWidth() / 2, d.getHeight() / 2).moveTo(xcoordinates, d.getHeight() / 2).release();
+        TouchAction ta1 = new TouchAction((MobileDriver) driver).press(d.getWidth() / 2, d.getHeight() / 2).moveTo(xcoordinates, d.getHeight() / 2).release();
+        mta.add(ta0).add(ta1).perform();
     }
 }
