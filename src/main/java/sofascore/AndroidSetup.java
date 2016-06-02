@@ -89,6 +89,8 @@ public class AndroidSetup {
 // Now you can do whatever you need to do with it, for example copy somewhere
         FileUtils.copyFile(scrFile, new File("c:\\tmp\\screenshot.png"));
 
+        //To enable WebView debugging, call the static method setWebContentsDebuggingEnabled on the WebView class
+
         return driver;
     }
 }
