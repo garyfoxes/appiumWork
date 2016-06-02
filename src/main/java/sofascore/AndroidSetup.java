@@ -8,9 +8,13 @@ import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -55,7 +59,7 @@ public class AndroidSetup {
      *
      * @return
      */
-    public AndroidDriver otherFunctionalityToUse() {
+    public AndroidDriver otherFunctionalityToUse() throws IOException {
         //sets the package name(Can be used if you can't install the apk directly)
         capabilities.setCapability(MobileCapabilityType.APP_PACKAGE, "com.sofascore.results");
         //sets the activity(each page can have a different activity.MainActivity is normally the homepage)
@@ -72,6 +76,19 @@ public class AndroidSetup {
         TouchAction touchAction = new TouchAction(driver);
         touchAction.longPress(elementByAndroidUIAutomator, 2).release();
         touchAction.perform();
+
+        //switches to frame
+        driver.switchTo().frame(0);
+        //if you are in a frame within a frame you can default back to the parent frame(Not the main web page)
+        driver.switchTo().parentFrame();
+        //switches to main page
+        driver.switchTo().defaultContent();
+
+        //take screenshot
+        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+// Now you can do whatever you need to do with it, for example copy somewhere
+        FileUtils.copyFile(scrFile, new File("c:\\tmp\\screenshot.png"));
+
         return driver;
     }
 }
