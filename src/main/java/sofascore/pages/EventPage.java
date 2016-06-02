@@ -12,7 +12,7 @@ public class EventPage extends BasePage {
         super(driver);
     }
 
-    public HomePage selectBackButton() {
+    public HomePage selectBackButton() throws InterruptedException {
         waitForVisibilityOf(EventPageObjects.btnBack());
         driver.findElement(EventPageObjects.btnBack()).click();
         return new HomePage(driver);

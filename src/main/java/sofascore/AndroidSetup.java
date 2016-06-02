@@ -22,6 +22,7 @@ public class AndroidSetup {
     protected AndroidDriver driver;
     protected AppiumDriverLocalService service;
     protected DesiredCapabilities capabilities;
+    protected boolean firstLaunch = false;
 
     protected void prepareAndroidForAppium() throws MalformedURLException {
 
@@ -30,7 +31,8 @@ public class AndroidSetup {
         serviceBuilder.usingAnyFreePort();
         service = AppiumDriverLocalService.buildService(serviceBuilder);
         service.start();
-        File appDir = new File("src\\main\\resources");
+        //Use '/' for MAC '\\' For Windows
+        File appDir = new File("src/main/resources");
         File app = new File(appDir, "sofascore.apk");
         capabilities = new DesiredCapabilities();
         //capabilities.setCapability("device", "emulator-5554");
@@ -44,6 +46,7 @@ public class AndroidSetup {
         //if you are connecting to a specific device(emulator or physical) if 2 devices are connected and this is not specified then the first available device will be run
         capabilities.setCapability(MobileCapabilityType.UDID, "0f576837");
         driver = new AndroidDriver(new URL("http://127.0.0.1:" + service.getUrl().getPort() + "/wd/hub"), capabilities);
+        firstLaunch = true;
     }
 
     /**

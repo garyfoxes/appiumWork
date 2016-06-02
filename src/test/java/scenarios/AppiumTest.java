@@ -18,8 +18,12 @@ public class AppiumTest extends AndroidSetup {
     }
 
     @BeforeMethod
-    public void beforeMethod() throws MalformedURLException {
-        driver.launchApp();
+    public void beforeMethod() {
+        driver.unlockDevice();
+        if (!firstLaunch) {
+            driver.launchApp();
+        }
+        firstLaunch = true;
     }
 
     @AfterClass
@@ -45,7 +49,7 @@ public class AppiumTest extends AndroidSetup {
     }
 
     @Test(priority = 1, description = "Select date From Calendar")
-    public void swipeToNextDayAndSelectEvent() {
+    public void swipeToNextDayAndSelectEvent() throws InterruptedException {
         HomePage homePage = new HomePage(driver).swipeToNextDay().selectTournament(Tournaments.INTERNATIONAL);
         EventPage eventPage = homePage.selectEvent();
         Assert.assertTrue(eventPage.isEventDetailsPresent(), "Event Details Are Not Displayed");

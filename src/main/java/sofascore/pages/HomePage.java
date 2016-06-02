@@ -12,13 +12,17 @@ import sofascore.objects.HomePageObjects;
 
 public class HomePage extends BasePage {
 
-    public HomePage(WebDriver driver) {
+    public HomePage(WebDriver driver){
         super(driver);
         waitForVisibilityOf(HomePageObjects.tabGames());
+
     }
 
-    public HomePage selectTournament(Tournaments tournament) {
-        waitForVisibilityOf(HomePageObjects.lnktournamentType(tournament.getTournament()));
+    public HomePage selectTournament(Tournaments tournament) throws InterruptedException {
+        Thread.sleep(2000);
+        if (!isTournamentDisplayed(tournament)) {
+            scrollDownToLastTournament(tournament);
+        }
         driver.findElement(HomePageObjects.lnktournamentType(tournament.getTournament())).click();
         return this;
     }
@@ -32,6 +36,11 @@ public class HomePage extends BasePage {
     public boolean isEventDisplayedForTournament() {
         return driver.findElements(HomePageObjects.eventTiles()).size() != 0;
     }
+
+    public boolean isTournamentDisplayed(Tournaments tournaments) {
+        return driver.findElements(HomePageObjects.lnktournamentType(tournaments.getTournament())).size() != 0;
+    }
+
 
     public HomePage scrollDownToLastTournament(Tournaments tournament) {
         while (driver.findElements(HomePageObjects.lnktournamentType(tournament.getTournament())).size() == 0) {
