@@ -31,6 +31,12 @@
             <artifactId>lombok</artifactId>
             <version>1.16.0</version>
         </dependency>
+        <dependency>
+                <groupId>com.saucelabs</groupId>
+                <artifactId>saucerest</artifactId>
+                <version>1.0.27</version>
+                <!--<scope>test</scope>-->
+            </dependency>
     </dependencies>
 
     <dependencyManagement>
