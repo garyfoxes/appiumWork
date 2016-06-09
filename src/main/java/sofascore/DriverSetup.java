@@ -1,12 +1,10 @@
 package sofascore;
 
-import com.saucelabs.saucerest.SauceREST;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidKeyCode;
 import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.remote.MobileBrowserType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
