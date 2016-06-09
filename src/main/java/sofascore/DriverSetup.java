@@ -38,8 +38,8 @@ public class DriverSetup {
         service = AppiumDriverLocalService.buildService(serviceBuilder);
         service.start();
         //Use '/' for MAC '\\' For Windows
-        File appDir = new File("src/main/resources");
-        File app = new File(appDir, "sofascore.apk");
+        File appDirectory = new File("src/main/resources");
+        File app = new File(appDirectory, "sofascore.apk");
         capabilities = new DesiredCapabilities();
         //capabilities.setCapability("device", "emulator-5554");
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Android Emulator");
