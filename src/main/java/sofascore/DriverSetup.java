@@ -32,7 +32,7 @@ public class DriverSetup {
 
     protected void prepareAndroidForAppium() throws MalformedURLException {
 
-        //starts the appium server
+        //starts the appium server for once
         AppiumServiceBuilder serviceBuilder = new AppiumServiceBuilder();
         serviceBuilder.usingAnyFreePort();
         service = AppiumDriverLocalService.buildService(serviceBuilder);
