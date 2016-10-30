@@ -5,12 +5,14 @@ import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidKeyCode;
 import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.remote.MobileBrowserType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
@@ -21,16 +23,21 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by gfox on 24/05/2016.
+ *
+ *  // The following may have to be run before each test, problems with chrome through emulator (adb uninstall io.appium.settings; adb uninstall io.appium.unlock)
+ *  Works on 1.6 running the server through the code but the Appium.dmg is on 1.5.3 and has issues so run the command above to get it to work.
+ *  Check and see if 1.6 is available on the client.
  */
 public class DriverSetup {
 
     protected AndroidDriver driver;
+    protected WebDriver weDriver;
     protected IOSDriver iosDriver;
     protected AppiumDriverLocalService service;
     protected DesiredCapabilities capabilities;
     protected boolean firstLaunch = false;
 
-    protected void prepareAndroidForAppium() throws MalformedURLException {
+    protected void prepareAndroidForAppium(boolean ifMobileBrowser) throws MalformedURLException {
 
         //starts the appium server
         AppiumServiceBuilder serviceBuilder = new AppiumServiceBuilder();
@@ -38,20 +45,38 @@ public class DriverSetup {
         service = AppiumDriverLocalService.buildService(serviceBuilder);
         service.start();
         //Use '/' for MAC '\\' For Windows
-        File appDir= new File("src/main/resources");
+        File appDir = new File("src/main/resources");
         File app = new File(appDir, "sofascore.apk");
         capabilities = new DesiredCapabilities();
-        //capabilities.setCapability("device", "emulator-5554");
+        //capabilities.setCapability(MobileCapabilityType.PLATFORM, Platform.MAC);
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Android Emulator");
-        //capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, MobileBrowserType.CHROME);
+        capabilities.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, 500);
         //IOS/Android/FireFoxOS
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
-        //path to apk
-        capabilities.setCapability(MobileCapabilityType.APP, app.getAbsolutePath());
-        capabilities.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, 500);
-        //if you are connecting to a specific device(emulator or physical) if 2 devices are connected and this is not specified then the first available device will be run
-        capabilities.setCapability(MobileCapabilityType.UDID, "0f576837");
-        driver = new AndroidDriver(new URL("http://127.0.0.1:" + service.getUrl().getPort() + "/wd/hub"), capabilities);
+        //capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME,"uiautomator2");
+        if (ifMobileBrowser) {
+            //will run off mobile web
+            //capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, MobileBrowserType.CHROME);
+            capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "7.1.1");
+            capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, MobileBrowserType.CHROME);
+            capabilities.setCapability(MobileCapabilityType.FULL_RESET, false);
+            capabilities.setCapability("appPackage", "com.android.chrome");
+            capabilities.setCapability("appActivity", "com.google.android.apps.chrome.Main");
+            //0f576837
+            capabilities.setCapability(MobileCapabilityType.UDID, "emulator-5554");
+            driver = new AndroidDriver(new URL("http://127.0.0.1:" + service.getUrl().getPort() + "/wd/hub"), capabilities);
+            driver.get("http://redcafe.net");
+        } else {
+            //path to apk
+            capabilities.setCapability(MobileCapabilityType.APP, app.getAbsolutePath());
+            //if you are connecting to a specific device(emulator or physical) if 2 devices are connected and this is not specified then the first available device will be run
+            //udid is gotten from ruuning adb devices(emulator will be something like emulator-5554,device will be something like 0f576837)
+            capabilities.setCapability(MobileCapabilityType.UDID, "emulator-5554");
+            capabilities.setCapability("appPackage", "com.sofascore.results"); // This is package name of your app (you can get it from apk info app)
+            capabilities.setCapability("appActivity", "com.sofascore.results.activity.StartActivity");
+            driver = new AndroidDriver(new URL("http://127.0.0.1:" + service.getUrl().getPort() + "/wd/hub"), capabilities);
+        }
+
         firstLaunch = true;
     }
 
@@ -84,7 +109,7 @@ public class DriverSetup {
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("browserName", "");
         //the .app file needs to be zipped on sauce labs storage
-        capabilities.setCapability("app","sauce-storage:myApp.zip");
+        capabilities.setCapability("app", "sauce-storage:myApp.zip");
         iosDriver = new IOSDriver(new URL("http://gfox:261ec9d3-5015-46a2-81c7-7960e448f868@ondemand.saucelabs.com:80/wd/hub"), capabilities);
         firstLaunch = true;
     }
@@ -97,9 +122,9 @@ public class DriverSetup {
      */
     public AndroidDriver otherFunctionalityToUse() throws IOException {
         //sets the package name(Can be used if you can't install the apk directly)
-        capabilities.setCapability(MobileCapabilityType.APP_PACKAGE, "com.sofascore.results");
+        //capabilities.setCapability(MobileCapabilityType.APP_PACKAGE, "com.sofascore.results");
         //sets the activity(each page can have a different activity.MainActivity is normally the homepage)
-        capabilities.setCapability(MobileCapabilityType.APP_ACTIVITY, "com.sofascore.results.activity.MainActivity");
+        //capabilities.setCapability(MobileCapabilityType.APP_ACTIVITY, "com.sofascore.results.activity.MainActivity");
 
 
         //Using UI Selector

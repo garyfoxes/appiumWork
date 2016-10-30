@@ -2,6 +2,7 @@ package sofascore.pages;
 
 import io.appium.java_client.MobileDriver;
 import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import sofascore.enums.Position;
@@ -14,6 +15,9 @@ public class HomePage extends BasePage {
 
     public HomePage(WebDriver driver){
         super(driver);
+        ((AndroidDriver) driver).tap(1,0,50,2);
+        waitForVisibilityOf(HomePageObjects.dropDownListOfSports("Football"));
+        driver.findElement(HomePageObjects.dropDownListOfSports("Football")).click();
         waitForVisibilityOf(HomePageObjects.tabGames());
 
     }

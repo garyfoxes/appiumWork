@@ -12,7 +12,7 @@ public class AndroidAppiumTest extends DriverSetup {
 
     @BeforeClass
     public void setUp() throws Exception {
-        prepareAndroidForAppium();
+        prepareAndroidForAppium(true);
     }
 
     @BeforeMethod
@@ -39,6 +39,7 @@ public class AndroidAppiumTest extends DriverSetup {
 
     @Test(priority = 0, description = "Navigate To Event Page")
     public void test() throws InterruptedException {
+
         HomePage page = new HomePage(driver).selectTournament(Tournaments.INTERNATIONAL);
         Assert.assertTrue(page.isEventDisplayedForTournament(), "Event Is Not Displayed For Tournament");
         page.scrollDownToLastTournament(Tournaments.RUSSIA).selectTournament(Tournaments.RUSSIA);

@@ -38,14 +38,14 @@ public class IOSAppiumTest extends DriverSetup {
     @Test(description = "IOS Sample Code")
     public void test() throws InterruptedException {
 
-        iosDriver.scrollTo("Switches").click();
+        //iosDriver.scrollTo("Switches").click();
         ((MobileElement) iosDriver.findElements(By.className("UIASwitch")).get(0)).click();
         iosDriver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
-        iosDriver.scrollTo("Picker View").click();
+        //iosDriver.scrollTo("Picker View").click();
         ((MobileElement) iosDriver.findElements(By.className("UIAPickerWheel")).get(0)).sendKeys("85");
         ((MobileElement) iosDriver.findElements(By.className("UIAPickerWheel")).get(1)).sendKeys("215");
         iosDriver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
-        iosDriver.scrollTo("Alert Views").click();
+        //iosDriver.scrollTo("Alert Views").click();
         iosDriver.findElement(By.xpath("//*[@name='Simple']")).click();
         iosDriver.switchTo().alert().accept();
 
