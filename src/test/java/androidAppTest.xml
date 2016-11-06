@@ -1,5 +1,7 @@
-<suite name="Suite1" verbose="1">
-    <test name="Regression1">
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite1" verbose="1" data-provider-thread-count="2" thread-count="2" parallel="classes">
+    <test name="Regression1" thread-count="2" parallel="instances">
+        <parameter name="myName" value="${testVariable}123"/>
         <classes>
             <class name="scenarios.AndroidAppiumTest"/>
         </classes>
@@ -7,5 +9,20 @@
     </test>
 
 </suite>
+
+<!--
+See http://howtodoinjava.com/testng/testng-executing-parallel-tests/ for alternate ways of executing
+tests in parallel. Shows how to parallel classes/tests/suites
+The example runs 'parallel = classes' and makes each instance of the
+class parallel with parallel="instances" (need a constructor in the class you are running)
+The alternative way is in the url provided
+
+the 'myName' parameter is gotten from the pom.xml (In the systemPropertyVariables tag)
+Its passed using the command below
+ mvn test -PAndroidApp -DtestV=QA
+
+-->
+
+
 
 

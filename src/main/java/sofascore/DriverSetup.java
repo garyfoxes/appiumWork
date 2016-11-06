@@ -23,10 +23,10 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by gfox on 24/05/2016.
- *
- *  // The following may have to be run before each test, problems with chrome through emulator (adb uninstall io.appium.settings; adb uninstall io.appium.unlock)
- *  Works on 1.6 running the server through the code but the Appium.dmg is on 1.5.3 and has issues so run the command above to get it to work.
- *  Check and see if 1.6 is available on the client.
+ * <p>
+ * // The following may have to be run before each test, problems with chrome through emulator (adb uninstall io.appium.settings; adb uninstall io.appium.unlock)
+ * Works on 1.6 running the server through the code but the Appium.dmg is on 1.5.3 and has issues so run the command above to get it to work.
+ * Check and see if 1.6 is available on the client.
  */
 public class DriverSetup {
 
@@ -37,44 +37,50 @@ public class DriverSetup {
     protected DesiredCapabilities capabilities;
     protected boolean firstLaunch = false;
 
-    protected void prepareAndroidForAppium(boolean ifMobileBrowser) throws MalformedURLException {
-
+    protected void prepareAndroidForAppium(String appName,String browserName) throws MalformedURLException {
+        System.out.println("APP NAME " + appName + " BROWSER NAME " + browserName);
         //starts the appium server
-        AppiumServiceBuilder serviceBuilder = new AppiumServiceBuilder();
+       /* AppiumServiceBuilder serviceBuilder = new AppiumServiceBuilder();
         serviceBuilder.usingAnyFreePort();
         service = AppiumDriverLocalService.buildService(serviceBuilder);
-        service.start();
+        service.start();*/
         //Use '/' for MAC '\\' For Windows
         File appDir = new File("src/main/resources");
         File app = new File(appDir, "sofascore.apk");
         capabilities = new DesiredCapabilities();
+        //capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "7.1.1");
         //capabilities.setCapability(MobileCapabilityType.PLATFORM, Platform.MAC);
+        //capabilities.setCapability("appPackage", "com.android.chrome");
+        //capabilities.setCapability("appActivity", "com.google.android.apps.chrome.Main");
+        //capabilities.setCapability(MobileCapabilityType.FULL_RESET, true);
+        //capabilities.setCapability("noReset", true);
+        //capabilities.setCapability(MobileCapabilityType.UDID, "emulator-5554");
+
+
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Android Emulator");
         capabilities.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, 500);
         //IOS/Android/FireFoxOS
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
-        //capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME,"uiautomator2");
-        if (ifMobileBrowser) {
-            //will run off mobile web
+        if (browserName.equalsIgnoreCase("Chrome")) {
             //capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, MobileBrowserType.CHROME);
-            capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "7.1.1");
             capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, MobileBrowserType.CHROME);
-            capabilities.setCapability(MobileCapabilityType.FULL_RESET, false);
-            capabilities.setCapability("appPackage", "com.android.chrome");
-            capabilities.setCapability("appActivity", "com.google.android.apps.chrome.Main");
+            capabilities.setCapability("applicationName", appName);
             //0f576837
-            capabilities.setCapability(MobileCapabilityType.UDID, "emulator-5554");
-            driver = new AndroidDriver(new URL("http://127.0.0.1:" + service.getUrl().getPort() + "/wd/hub"), capabilities);
+            driver = new AndroidDriver(new URL("http://127.0.0.1:4444/wd/hub"), capabilities);
             driver.get("http://redcafe.net");
         } else {
             //path to apk
+            capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "uiautomator2");
+            capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, browserName);
+            capabilities.setCapability("applicationName", appName);
             capabilities.setCapability(MobileCapabilityType.APP, app.getAbsolutePath());
             //if you are connecting to a specific device(emulator or physical) if 2 devices are connected and this is not specified then the first available device will be run
             //udid is gotten from ruuning adb devices(emulator will be something like emulator-5554,device will be something like 0f576837)
-            capabilities.setCapability(MobileCapabilityType.UDID, "emulator-5554");
+            //capabilities.setCapability(MobileCapabilityType.UDID, "emulator-5554");
             capabilities.setCapability("appPackage", "com.sofascore.results"); // This is package name of your app (you can get it from apk info app)
             capabilities.setCapability("appActivity", "com.sofascore.results.activity.StartActivity");
-            driver = new AndroidDriver(new URL("http://127.0.0.1:" + service.getUrl().getPort() + "/wd/hub"), capabilities);
+            //driver = new AndroidDriver(new URL("http://127.0.0.1:" + service.getUrl().getPort() + "/wd/hub"), capabilities);
+            driver = new AndroidDriver(new URL("http://127.0.0.1:4444/wd/hub"), capabilities);
         }
 
         firstLaunch = true;
